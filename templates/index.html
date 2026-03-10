@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Library Management System</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1 class="title">Library Dashboard</h1>
+
+<!-- Dashboard Cards -->
+
+<div class="dashboard">
+
+<div class="card blue">
+<h3>Total Books</h3>
+<p>{{total_books}}</p>
+</div>
+
+<div class="card orange">
+<h3>Currently Issued</h3>
+<p>{{issued_books}}</p>
+</div>
+
+</div>
+
+
+<!-- Add Book -->
+
+<div class="section">
+
+<h2>Add Book</h2>
+
+<form action="/add" method="post">
+
+<input type="text" name="title" placeholder="Book Title" required>
+<input type="text" name="author" placeholder="Author" required>
+<input type="number" name="copies" placeholder="Copies" required>
+
+<button class="btn green">Add Book</button>
+
+</form>
+
+</div>
+
+
+<!-- Search -->
+
+<div class="section">
+
+<h2>Search Book</h2>
+
+<form action="/search" method="post">
+
+<input type="text" name="keyword" placeholder="Enter book name">
+
+<button class="btn blue">Search</button>
+
+</form>
+
+</div>
+
+
+<!-- Book List -->
+
+<div class="section">
+
+<h2>Book List</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Title</th>
+<th>Author</th>
+<th>Copies</th>
+<th>Action</th>
+</tr>
+
+{% for book in books %}
+
+<tr>
+<td>{{book[0]}}</td>
+<td>{{book[1]}}</td>
+<td>{{book[2]}}</td>
+<td>{{book[3]}}</td>
+
+<td>
+<a class="btn red small" href="/delete/{{book[0]}}">Delete</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- Issue Book -->
+
+<div class="section">
+
+<h2>Issue Book</h2>
+
+<form action="/issue" method="post">
+
+<select name="book_id">
+
+{% for book in books %}
+<option value="{{book[0]}}">
+{{book[1]}} (ID: {{book[0]}})
+</option>
+{% endfor %}
+
+</select>
+
+<input type="text" name="student_name" placeholder="Student Name">
+<input type="date" name="issue_date">
+
+<button class="btn orange">Issue</button>
+
+</form>
+
+</div>
+
+
+<!-- Issued Books -->
+
+<div class="section">
+
+<h2>Issued Books</h2>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Book ID</th>
+<th>Student</th>
+<th>Issue Date</th>
+<th>Return Date</th>
+<th>Status</th>
+</tr>
+
+{% for book in issued %}
+
+<tr>
+
+<td>{{book[0]}}</td>
+<td>{{book[1]}}</td>
+<td>{{book[2]}}</td>
+<td>{{book[3]}}</td>
+<td>{{book[4]}}</td>
+
+<td>
+
+{% if book[5] == 'Overdue' %}
+<span class="status red">Overdue</span>
+
+{% elif book[5] == 'Returned' %}
+<span class="status green">Returned</span>
+
+{% else %}
+<span class="status orange">Issued</span>
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+
+<!-- Return Book -->
+
+<div class="section">
+
+<h2>Return Book</h2>
+
+<form action="/return" method="post">
+
+<input type="number" name="issue_id" placeholder="Issue ID">
+
+<button class="btn green">Return Book</button>
+
+</form>
+
+</div>
+
+
+<!-- Overdue -->
+
+<div class="section">
+
+<h2 class="danger-title">Overdue Books</h2>
+
+<table>
+
+<tr>
+<th>Book ID</th>
+<th>Student</th>
+<th>Issue Date</th>
+<th>Due Date</th>
+<th>Late Days</th>
+<th>Fine (Rs)</th>
+</tr>
+
+{% for book in overdue %}
+
+<tr>
+
+<td>{{book[1]}}</td>
+<td>{{book[2]}}</td>
+<td>{{book[3]}}</td>
+<td>{{book[4]}}</td>
+<td>{{book[5]}}</td>
+<td>{{book[6]}}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
